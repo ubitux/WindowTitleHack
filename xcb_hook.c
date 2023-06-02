@@ -1,6 +1,8 @@
 #include <dlfcn.h>
+#include <stdlib.h>
 #include <string.h>
-#include <xcb/xproto.h>
+#include <xcb/xcb.h>
+#include <xcb/xcb_atom.h>
 
 #include "wth.h"
 
@@ -16,6 +18,7 @@ typedef xcb_void_cookie_t (*xcb_change_property_func_type)(
 );
 
 static xcb_change_property_func_type xcb_change_property_orig;
+static xcb_atom_t _NET_WM_NAME;
 
 xcb_void_cookie_t xcb_change_property(
     xcb_connection_t *conn,
@@ -31,12 +34,15 @@ xcb_void_cookie_t xcb_change_property(
     if (!xcb_change_property_orig)
         xcb_change_property_orig = dlsym(RTLD_NEXT, __func__);
 
-    xcb_get_atom_name_reply_t *reply = xcb_get_atom_name_reply(conn, xcb_get_atom_name(conn, property), NULL);
-    char *property_name = xcb_get_atom_name_name(reply);
-    int len = xcb_get_atom_name_name_length(reply);
-    const int chg = !strncmp(property_name, "WM_NAME", len) || !strncmp(property_name, "_NET_WM_NAME", len);
+    if (!_NET_WM_NAME) {
+        const xcb_intern_atom_cookie_t cookie = xcb_intern_atom(conn, 0, strlen("_NET_WM_NAME"), "_NET_WM_NAME");
+        xcb_intern_atom_reply_t *reply = xcb_intern_atom_reply(conn, cookie, NULL);
+        if (reply)
+            _NET_WM_NAME = reply->atom;
+        free(reply);
+    }
 
-    if (chg) {
+    if (property == XCB_ATOM_WM_NAME || property == _NET_WM_NAME) {
         const char *new_title = wth_get_title();
         return xcb_change_property_orig(conn, mode, window, property, type, format, (uint32_t)strlen(new_title), (const void *)new_title);
     }

@@ -21,7 +21,7 @@ project_args = cc.get_supported_arguments([
 add_project_arguments(project_args, language: 'c')
 
 dep_x11 = dependency('x11')
-dep_xcb = dependency('xcb')
+dep_xcb = dependency('xcb-atom')
 deps = [dep_x11, dep_xcb]
 
 src = files(
