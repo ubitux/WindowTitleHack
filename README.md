@@ -27,7 +27,6 @@ LD_PRELOAD="builddir/libwth.so" WTH_TITLE="Krita4ever" krita
   menus, etc)
 - Depending on the API used by the target application, UTF-8 and multibytes
   strings may not work as expected
-- There is no guarantee about thread safety
 
 
 [OBS Studio]: https://obsproject.com/
