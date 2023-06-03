@@ -16,8 +16,7 @@ typedef int (*XChangeProperty_func_type)(
     int nelements
 );
 
-static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
-static int initialized;
+static struct wth_once once = WTH_ONCE_INITIALIZER;
 static const char *new_title;
 static XChangeProperty_func_type XChangeProperty_orig;
 static Atom _NET_WM_NAME;
@@ -43,7 +42,7 @@ int XChangeProperty(
     const unsigned char *data,
     int nelements
 ) {
-    wth_init_once(&lock, &initialized, init_once, display);
+    wth_init_once(&once, init_once, display);
 
     if (property == XA_WM_NAME || property == _NET_WM_NAME) {
         data = (const unsigned char *)new_title;

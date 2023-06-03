@@ -9,12 +9,12 @@ const char *wth_get_title(void)
     return env_title ? env_title : "Use WTH_TITLE environment variable to replace this";
 }
 
-void wth_init_once(pthread_mutex_t *lock, int *initialized, init_func_type init_func, void *user_arg)
+void wth_init_once(struct wth_once *once, init_func_type init_func, void *user_arg)
 {
-    pthread_mutex_lock(lock);
-    if (!*initialized) {
+    pthread_mutex_lock(&once->lock);
+    if (!once->initialized) {
         init_func(user_arg);
-        *initialized = 1;
+        once->initialized = 1;
     }
-    pthread_mutex_unlock(lock);
+    pthread_mutex_unlock(&once->lock);
 }

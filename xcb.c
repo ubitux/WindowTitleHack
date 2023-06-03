@@ -17,8 +17,7 @@ typedef xcb_void_cookie_t (*xcb_change_property_func_type)(
     const void *data
 );
 
-static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
-static int initialized;
+static struct wth_once once;
 static const char *new_title;
 static xcb_change_property_func_type xcb_change_property_orig;
 static xcb_atom_t _NET_WM_NAME;
@@ -48,7 +47,7 @@ xcb_void_cookie_t xcb_change_property(
     uint32_t data_len,
     const void *data
 ) {
-    wth_init_once(&lock, &initialized, init_once, conn);
+    wth_init_once(&once, init_once, conn);
 
     if (property == XCB_ATOM_WM_NAME || property == _NET_WM_NAME) {
         data = (const void *)new_title;
