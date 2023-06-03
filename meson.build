@@ -26,8 +26,8 @@ deps = [dep_x11, dep_xcb]
 
 src = files(
   'wth.c',
-  'xcb_hook.c',
-  'x11_hook.c',
+  'xcb.c',
+  'x11.c',
 )
 
 lib = library(
