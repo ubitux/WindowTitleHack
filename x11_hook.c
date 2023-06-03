@@ -18,6 +18,7 @@ typedef int (*XChangeProperty_func_type)(
 );
 
 static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+static const char *new_title;
 static XChangeProperty_func_type XChangeProperty_orig;
 static Atom _NET_WM_NAME;
 
@@ -40,10 +41,12 @@ int XChangeProperty(
     if (!_NET_WM_NAME)
         _NET_WM_NAME = XInternAtom(display, "_NET_WM_NAME", 0);
 
+    if (!new_title)
+        new_title = wth_get_title();
+
     pthread_mutex_unlock(&lock);
 
     if (property == XA_WM_NAME || property == _NET_WM_NAME) {
-        const char *new_title = wth_get_title();
         return XChangeProperty_orig(display, w, property, type, format, mode, (const unsigned char *)new_title, (int)strlen(new_title));
     }
 

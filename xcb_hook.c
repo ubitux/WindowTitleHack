@@ -19,6 +19,7 @@ typedef xcb_void_cookie_t (*xcb_change_property_func_type)(
 );
 
 static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+static const char *new_title;
 static xcb_change_property_func_type xcb_change_property_orig;
 static xcb_atom_t _NET_WM_NAME;
 
@@ -46,10 +47,12 @@ xcb_void_cookie_t xcb_change_property(
         free(reply);
     }
 
+    if (!new_title)
+        new_title = wth_get_title();
+
     pthread_mutex_unlock(&lock);
 
     if (property == XCB_ATOM_WM_NAME || property == _NET_WM_NAME) {
-        const char *new_title = wth_get_title();
         return xcb_change_property_orig(conn, mode, window, property, type, format, (uint32_t)strlen(new_title), (const void *)new_title);
     }
 
