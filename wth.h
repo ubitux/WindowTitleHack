@@ -5,6 +5,7 @@
 
 const char *wth_get_title(void);
 
+/* The "once" API is similar to pthread_once but allows a custom function argument */
 struct wth_once {
     pthread_mutex_t lock;
     int initialized;
