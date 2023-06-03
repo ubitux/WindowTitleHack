@@ -27,10 +27,10 @@ static void init_once(void *user_arg)
     /* Cache original function pointer */
     XChangeProperty_orig = dlsym(RTLD_NEXT, "XChangeProperty");
 
+    new_title = wth_get_title();
+
     Display *display = user_arg;
     _NET_WM_NAME = XInternAtom(display, "_NET_WM_NAME", 0);
-
-    new_title = wth_get_title();
 }
 
 int XChangeProperty(

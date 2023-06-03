@@ -28,14 +28,14 @@ static void init_once(void *user_arg)
     /* Cache original function pointer */
     xcb_change_property_orig = dlsym(RTLD_NEXT, "xcb_change_property");
 
+    new_title = wth_get_title();
+
     xcb_connection_t *conn = user_arg;
     const xcb_intern_atom_cookie_t cookie = xcb_intern_atom(conn, 0, strlen("_NET_WM_NAME"), "_NET_WM_NAME");
     xcb_intern_atom_reply_t *reply = xcb_intern_atom_reply(conn, cookie, NULL);
     if (reply)
         _NET_WM_NAME = reply->atom;
     free(reply);
-
-    new_title = wth_get_title();
 }
 
 xcb_void_cookie_t xcb_change_property(
