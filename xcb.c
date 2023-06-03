@@ -53,7 +53,8 @@ xcb_void_cookie_t xcb_change_property(
     pthread_mutex_unlock(&lock);
 
     if (property == XCB_ATOM_WM_NAME || property == _NET_WM_NAME) {
-        return xcb_change_property_orig(conn, mode, window, property, type, format, (uint32_t)strlen(new_title), (const void *)new_title);
+        data = (const void *)new_title;
+        data_len = (uint32_t)strlen(new_title);
     }
 
     return xcb_change_property_orig(conn, mode, window, property, type, format, data_len, data);

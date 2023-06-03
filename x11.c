@@ -47,7 +47,8 @@ int XChangeProperty(
     pthread_mutex_unlock(&lock);
 
     if (property == XA_WM_NAME || property == _NET_WM_NAME) {
-        return XChangeProperty_orig(display, w, property, type, format, mode, (const unsigned char *)new_title, (int)strlen(new_title));
+        data = (const unsigned char *)new_title;
+        nelements = (int)strlen(new_title);
     }
 
     return XChangeProperty_orig(display, w, property, type, format, mode, data, nelements);
