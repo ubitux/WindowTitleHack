@@ -5,6 +5,8 @@ It is useful for tools looking at this property, such as [OBS Studio] (typically
 with the builtin Automatic Scene Switcher) when used in combination with tools
 that change their title bar all the time (Firefox, Krita, …).
 
+See [this blog post][blog-post] for more details.
+
 ## Building
 
 ```sh
@@ -30,3 +32,4 @@ LD_PRELOAD="builddir/libwth.so" WTH_TITLE="Krita4ever" krita
 
 
 [OBS Studio]: https://obsproject.com/
+[blog-post]: https://blog.pkh.me/p/40-hacking-window-titles-to-help-obs.html
